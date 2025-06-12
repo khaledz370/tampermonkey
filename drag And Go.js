@@ -81,15 +81,6 @@
         }
     });
 
-
-    document.addEventListener('onkeydown', function(event) {
-        if (event.key === 'Escape' || event.keyCode === 27) {
-            redirectUrl= null;
-            console.log('Escape key pressed');
-        }
-    });
-
-
     $(document).on('dragend', (event) => {
         const originalEvent = event.originalEvent;
         const dropEffect = originalEvent?.dataTransfer?.dropEffect;
