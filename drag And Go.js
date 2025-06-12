@@ -49,13 +49,12 @@
 
     $(document).on('dragover', (e) => {
         if (!isDragging || !selectionBoundingRect) return;
-        if (event.altKey) {
-            isAltPressed = true
-        }else{
-            isAltPressed = false
+
+        isAltPressed = event.altKey;
+
+        if (!isAltPressed) {
             e.preventDefault();
         }
-
 
         $('body').css('cursor', 'grabbing');
 
