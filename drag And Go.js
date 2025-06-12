@@ -21,6 +21,7 @@
     let isDragging = false;
     let selectedText = null;
     let selectionBoundingRect = null;
+    let isAltPressed = false;
 
     $(document).on('selectionchange', () => {
         const selection = window.getSelection();
@@ -31,6 +32,10 @@
     });
 
     $(document).on('dragstart', (e) => {
+        if (e.altKey) {
+            isAltPressed = true
+            return;
+        }
         const selection = window.getSelection();
         if (selection.rangeCount > 0 && selection.toString().trim() !== '' && selectionBoundingRect) {
             selectedText = selection.toString();
@@ -44,7 +49,13 @@
 
     $(document).on('dragover', (e) => {
         if (!isDragging || !selectionBoundingRect) return;
-        e.preventDefault();
+        if (event.altKey) {
+            isAltPressed = true
+        }else{
+            isAltPressed = false
+            e.preventDefault();
+        }
+
 
         $('body').css('cursor', 'grabbing');
 
@@ -81,18 +92,17 @@
 
     $(document).on('dragend', (event) => {
         const dropEffect = event.originalEvent.dataTransfer.dropEffect;
-        if (dropEffect === 'none') {
+        $('body').css('cursor', 'default');
+        isDragging = false;
+        if (dropEffect === 'none' || isAltPressed) {
 
         } else {
-            isDragging = false;
-            $('body').css('cursor', 'default');
             if (redirectUrl && selectedText) {
                 let finalUrl = redirectUrl.replace("%s", encodeURIComponent(selectedText));
                 console.log(`Opening: ${finalUrl}`);
-                window.open(finalUrl, '_blank');
+                // window.open(finalUrl, '_blank');
             }
         }
-
     });
 
 })(jQuery);
