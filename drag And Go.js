@@ -32,10 +32,6 @@
     });
 
     $(document).on('dragstart', (e) => {
-        if (e.altKey) {
-            isAltPressed = true
-            return;
-        }
         const selection = window.getSelection();
         if (selection.rangeCount > 0 && selection.toString().trim() !== '' && selectionBoundingRect) {
             selectedText = selection.toString();
