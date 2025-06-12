@@ -32,6 +32,10 @@
     });
 
     $(document).on('dragstart', (e) => {
+        if (e.altKey) {
+            isAltPressed = true
+            return;
+        }
         const selection = window.getSelection();
         if (selection.rangeCount > 0 && selection.toString().trim() !== '' && selectionBoundingRect) {
             selectedText = selection.toString();
@@ -45,12 +49,13 @@
 
     $(document).on('dragover', (e) => {
         if (!isDragging || !selectionBoundingRect) return;
-
-        isAltPressed = event.altKey;
-
-        if (!isAltPressed) {
+        if (event.altKey) {
+            isAltPressed = true
+        }else{
+            isAltPressed = false
             e.preventDefault();
         }
+
 
         $('body').css('cursor', 'grabbing');
 
@@ -76,20 +81,27 @@
         }
     });
 
-    $(document).on('dragend', (event) => {
-        const originalEvent = event.originalEvent;
-        const dropEffect = originalEvent?.dataTransfer?.dropEffect;
-        const isNoDrop = dropEffect === 'none' || isAltPressed;
 
+    document.addEventListener('onkeydown', function(event) {
+        if (event.key === 'Escape' || event.keyCode === 27) {
+            redirectUrl= null;
+            console.log('Escape key pressed');
+        }
+    });
+
+
+    $(document).on('dragend', (event) => {
+        const dropEffect = event.originalEvent.dataTransfer.dropEffect;
         $('body').css('cursor', 'default');
         isDragging = false;
+        if (dropEffect === 'none' || isAltPressed) {
 
-        if (isNoDrop) return;
-
-        if (redirectUrl && selectedText) {
-            const finalUrl = redirectUrl.replace('%s', encodeURIComponent(selectedText));
-            console.log(`Opening: ${finalUrl}`);
-            window.open(finalUrl, '_blank');
+        } else {
+            if (redirectUrl && selectedText) {
+                let finalUrl = redirectUrl.replace("%s", encodeURIComponent(selectedText));
+                console.log(`Opening: ${finalUrl}`);
+                window.open(finalUrl, '_blank');
+            }
         }
     });
 
