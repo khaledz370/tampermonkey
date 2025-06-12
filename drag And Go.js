@@ -14,8 +14,8 @@
 (function($) {
     'use strict';
 
-    const google = "https://www.google.com/search?q=%ss";
-    const youtube = "https://www.youtube.com/results?search_query=%ss";
+    const google = "https://www.google.com/search?q=%s";
+    const youtube = "https://www.youtube.com/results?search_query=%s";
 
     let redirectUrl = null;
     let isDragging = false;
@@ -70,14 +70,29 @@
         }
     });
 
-    $(document).on('dragend', () => {
-        isDragging = false;
-        if (redirectUrl && selectedText) {
-            $('body').css('cursor', 'default');
-            let finalUrl = redirectUrl.replace("%ss", encodeURIComponent(selectedText));
-            console.log(`Opening: ${finalUrl}`);
-            window.open(finalUrl, '_blank');
+
+    document.addEventListener('onkeydown', function(event) {
+        if (event.key === 'Escape' || event.keyCode === 27) {
+            redirectUrl= null;
+            console.log('Escape key pressed');
         }
+    });
+
+
+    $(document).on('dragend', (event) => {
+        const dropEffect = event.originalEvent.dataTransfer.dropEffect;
+        if (dropEffect === 'none') {
+
+        } else {
+            isDragging = false;
+            $('body').css('cursor', 'default');
+            if (redirectUrl && selectedText) {
+                let finalUrl = redirectUrl.replace("%s", encodeURIComponent(selectedText));
+                console.log(`Opening: ${finalUrl}`);
+                window.open(finalUrl, '_blank');
+            }
+        }
+
     });
 
 })(jQuery);
