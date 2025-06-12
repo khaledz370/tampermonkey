@@ -91,17 +91,19 @@
 
 
     $(document).on('dragend', (event) => {
-        const dropEffect = event.originalEvent.dataTransfer.dropEffect;
+        const originalEvent = event.originalEvent;
+        const dropEffect = originalEvent?.dataTransfer?.dropEffect;
+        const isNoDrop = dropEffect === 'none' || isAltPressed;
+
         $('body').css('cursor', 'default');
         isDragging = false;
-        if (dropEffect === 'none' || isAltPressed) {
 
-        } else {
-            if (redirectUrl && selectedText) {
-                let finalUrl = redirectUrl.replace("%s", encodeURIComponent(selectedText));
-                console.log(`Opening: ${finalUrl}`);
-                // window.open(finalUrl, '_blank');
-            }
+        if (isNoDrop) return;
+
+        if (redirectUrl && selectedText) {
+            const finalUrl = redirectUrl.replace('%s', encodeURIComponent(selectedText));
+            console.log(`Opening: ${finalUrl}`);
+            window.open(finalUrl, '_blank');
         }
     });
 
