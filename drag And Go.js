@@ -11,8 +11,6 @@
 
 (function() {
     'use strict';
-    // Function to refresh the page
-
     const google = "https://www.google.com/search?q=%s";
     const youtube = "https://www.youtube.com/results?search_query=%s";
 
