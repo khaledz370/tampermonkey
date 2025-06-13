@@ -5,7 +5,7 @@
 // @description  Open dragged text in a new tab based on a base URL
 // @author       You
 // @grant        none
-// @match        https://*.youtube.com/*
+// @match        *://*/*
 // @icon         https://img.icons8.com/?size=100&id=Sm9xAvXfn1wF&format=png&color=000000
 // ==/UserScript==
 
