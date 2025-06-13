@@ -7,10 +7,15 @@
 // @grant        none
 // @match        *://*/*
 // @icon         https://img.icons8.com/?size=100&id=Sm9xAvXfn1wF&format=png&color=000000
+// @require      data:text/plain;base64,d2luZG93LnRydXN0ZWRUeXBlcy5jcmVhdGVQb2xpY3koJ2RlZmF1bHQnLCB7IGNyZWF0ZUhUTUw6IHN0ciA9PiBzdHIsIGNyZWF0ZVNjcmlwdFVSTDogc3RyPT4gc3RyLCBjcmVhdGVTY3JpcHQ6IHN0cj0+IHN0ciB9KTs=
+// @require      https://code.jquery.com/jquery-3.6.0.min.js
 // ==/UserScript==
+/* eslint-disable */
 
-(function() {
+(function($) {
     'use strict';
+    $.noConflict()
+
     const google = "https://www.google.com/search?q=%s";
     const youtube = "https://www.youtube.com/results?search_query=%s";
 
@@ -20,7 +25,7 @@
     let selectionBoundingRect = null;
     let isAltPressed = false;
 
-    document.addEventListener('selectionchange', () => {
+    $(document).on('selectionchange', function() {
         const selection = window.getSelection();
         if (selection.toString().trim() !== '') {
             const range = selection.getRangeAt(0);
@@ -28,7 +33,7 @@
         }
     });
 
-    document.addEventListener('dragstart', (e) => {
+    $(document).on('dragstart', function(e) {
         if (e.altKey) {
             isAltPressed = true;
             return;
@@ -36,15 +41,15 @@
         const selection = window.getSelection();
         if (selection.rangeCount > 0 && selection.toString().trim() !== '' && selectionBoundingRect) {
             selectedText = selection.toString();
-            e.dataTransfer.setData('text/plain', selectedText);
+            e.originalEvent.dataTransfer.setData('text/plain', selectedText);
             isDragging = true;
             const img = new Image();
             img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'; // transparent image
-            e.dataTransfer.setDragImage(img, 0, 0);
+            e.originalEvent.dataTransfer.setDragImage(img, 0, 0);
         }
     });
 
-    document.addEventListener('dragover', (e) => {
+    $(document).on('dragover', function(e) {
         if (!isDragging || !selectionBoundingRect) return;
 
         if (e.altKey) {
@@ -78,15 +83,15 @@
         }
     });
 
-    document.addEventListener('keydown', function(event) {
+    $(document).on('keydown', function(event) {
         if (event.key === 'Escape' || event.keyCode === 27) {
             redirectUrl = null;
             console.log('Escape key pressed');
         }
     });
 
-    document.addEventListener('dragend', (event) => {
-        const dropEffect = event.dataTransfer.dropEffect;
+    $(document).on('dragend', function(event) {
+        const dropEffect = event.originalEvent.dataTransfer.dropEffect;
         document.body.style.cursor = 'default';
         isDragging = false;
         if (dropEffect === 'none' || isAltPressed) {
@@ -100,4 +105,4 @@
         }
     });
 
-})();
+})(jQuery);
