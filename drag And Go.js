@@ -4,15 +4,14 @@
 // @version      0.1
 // @description  Open dragged text in a new tab based on a base URL
 // @author       You
-// @match        *://*/*
 // @grant        none
+// @match        https://*.youtube.com/*
 // @icon         https://img.icons8.com/?size=100&id=Sm9xAvXfn1wF&format=png&color=000000
-// @require      https://code.jquery.com/jquery-3.7.1.min.js
 // ==/UserScript==
 
-/* eslint-disable */
-(function($) {
+(function() {
     'use strict';
+    // Function to refresh the page
 
     const google = "https://www.google.com/search?q=%s";
     const youtube = "https://www.youtube.com/results?search_query=%s";
@@ -23,7 +22,7 @@
     let selectionBoundingRect = null;
     let isAltPressed = false;
 
-    $(document).on('selectionchange', () => {
+    document.addEventListener('selectionchange', () => {
         const selection = window.getSelection();
         if (selection.toString().trim() !== '') {
             const range = selection.getRangeAt(0);
@@ -31,33 +30,33 @@
         }
     });
 
-    $(document).on('dragstart', (e) => {
+    document.addEventListener('dragstart', (e) => {
         if (e.altKey) {
-            isAltPressed = true
+            isAltPressed = true;
             return;
         }
         const selection = window.getSelection();
         if (selection.rangeCount > 0 && selection.toString().trim() !== '' && selectionBoundingRect) {
             selectedText = selection.toString();
-            e.originalEvent.dataTransfer.setData('text/plain', selectedText);
+            e.dataTransfer.setData('text/plain', selectedText);
             isDragging = true;
             const img = new Image();
-            img.src = ''; // transparent image
-            e.originalEvent.dataTransfer.setDragImage(img, 0, 0);
+            img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'; // transparent image
+            e.dataTransfer.setDragImage(img, 0, 0);
         }
     });
 
-    $(document).on('dragover', (e) => {
+    document.addEventListener('dragover', (e) => {
         if (!isDragging || !selectionBoundingRect) return;
-        if (event.altKey) {
-            isAltPressed = true
-        }else{
-            isAltPressed = false
+
+        if (e.altKey) {
+            isAltPressed = true;
+        } else {
+            isAltPressed = false;
             e.preventDefault();
         }
 
-
-        $('body').css('cursor', 'grabbing');
+        document.body.style.cursor = 'grabbing';
 
         const x = e.clientX;
         const y = e.clientY;
@@ -81,21 +80,19 @@
         }
     });
 
-
-    document.addEventListener('onkeydown', function(event) {
+    document.addEventListener('keydown', function(event) {
         if (event.key === 'Escape' || event.keyCode === 27) {
-            redirectUrl= null;
+            redirectUrl = null;
             console.log('Escape key pressed');
         }
     });
 
-
-    $(document).on('dragend', (event) => {
-        const dropEffect = event.originalEvent.dataTransfer.dropEffect;
-        $('body').css('cursor', 'default');
+    document.addEventListener('dragend', (event) => {
+        const dropEffect = event.dataTransfer.dropEffect;
+        document.body.style.cursor = 'default';
         isDragging = false;
         if (dropEffect === 'none' || isAltPressed) {
-
+            // Do nothing
         } else {
             if (redirectUrl && selectedText) {
                 let finalUrl = redirectUrl.replace("%s", encodeURIComponent(selectedText));
@@ -105,4 +102,4 @@
         }
     });
 
-})(jQuery);
+})();
