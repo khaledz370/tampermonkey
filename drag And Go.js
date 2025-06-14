@@ -4,17 +4,19 @@
 // @version      0.1
 // @description  Open dragged text in a new tab based on a base URL
 // @author       You
-// @grant        none
+// @grant        GM_openInTab
 // @match        *://*/*
 // @icon         https://img.icons8.com/?size=100&id=Sm9xAvXfn1wF&format=png&color=000000
 // @require      data:text/plain;base64,d2luZG93LnRydXN0ZWRUeXBlcy5jcmVhdGVQb2xpY3koJ2RlZmF1bHQnLCB7IGNyZWF0ZUhUTUw6IHN0ciA9PiBzdHIsIGNyZWF0ZVNjcmlwdFVSTDogc3RyPT4gc3RyLCBjcmVhdGVTY3JpcHQ6IHN0cj0+IHN0ciB9KTs=
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
 // ==/UserScript==
+
 /* eslint-disable */
 
 (function($) {
     'use strict';
-    $.noConflict()
+
+    $.noConflict();
 
     const google = "https://www.google.com/search?q=%s";
     const youtube = "https://www.youtube.com/results?search_query=%s";
@@ -100,7 +102,9 @@
             if (redirectUrl && selectedText) {
                 let finalUrl = redirectUrl.replace("%s", encodeURIComponent(selectedText));
                 console.log(`Opening: ${finalUrl}`);
-                window.open(finalUrl, '_blank');
+
+                GM_openInTab(finalUrl, true);
+
             }
         }
     });
