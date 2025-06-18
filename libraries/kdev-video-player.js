@@ -203,3 +203,19 @@ class kDevVideoPlayer {
         });
     }
 }
+
+
+
+
+// usage 
+/* 
+document.addEventListener('DOMContentLoaded', () => {
+            const player = new gayaVP(document.querySelector('.video-container'), {
+                sources: [
+                    { src: 'video-480p.mkv', res: '480p' },
+                    { src: 'video-720p.mkv', res: '720p' },
+                    { src: 'video-1080p.mkv', res: '1080p' }
+                ]
+            });
+        });
+*/
