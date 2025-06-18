@@ -26,6 +26,7 @@
     let selectedText = null;
     let selectionBoundingRect = null;
     let isAltPressed = false;
+    let isNearTabArea = false;
 
     $(document).on('selectionchange', function() {
         const selection = window.getSelection();
@@ -66,6 +67,8 @@
         const x = e.clientX;
         const y = e.clientY;
 
+        isNearTabArea = y <= 5;
+
         const rect = selectionBoundingRect;
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
@@ -96,7 +99,7 @@
         const dropEffect = event.originalEvent.dataTransfer.dropEffect;
         document.body.style.cursor = 'default';
         isDragging = false;
-        if (dropEffect === 'none' || isAltPressed) {
+        if (dropEffect === 'none' || isAltPressed || isNearTabArea) {
             // Do nothing
         } else {
             if (redirectUrl && selectedText) {
